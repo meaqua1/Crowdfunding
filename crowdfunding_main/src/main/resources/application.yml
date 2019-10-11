@@ -1,0 +1,50 @@
+spring:
+  thymeleaf:
+    #\u9632\u6B62HTML\u7ED3\u675F\u6807\u7B7E\u62A5\u9519
+    mode: HTML
+    cache: false
+  #\u914D\u7F6E\u6570\u636E\u5E93
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/crowdfunding?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+  #    type: com.alibaba.druid.pool.DruidDataSource
+
+
+
+  #\u914D\u7F6ERedis
+  redis:
+    host: localhost
+    port: 6379
+  #\u914D\u7F6E\u9879\u76EE\u5B57\u7B26\u7F16\u7801
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+
+#\u914D\u7F6Emybatis
+mybatis:
+  #mapper\u6240\u5728\u4F4D\u7F6E
+  mapper-locations: classpath:mapper/*.xml
+  #\u522B\u540D\u6240\u626B\u63CF\u7684\u5305
+  type-aliases-package: com.hh.crowdfunding.domain
+  #\u5F00\u542F\u9A7C\u5CF0\u547D\u540D
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+# \u5C06mapper\u63A5\u53E3\u6240\u5728\u5305\u7684\u65E5\u5FD7\u7EA7\u522B\u6539\u6210debug\uFF0C\u53EF\u4EE5\u5728\u63A7\u5236\u53F0\u6253\u5370sql
+logging:
+  level:
+    com.hh.crowdfunding.manager.dao: debug
+    com.hh.crowdfunding.potal.dao: debug
+
+
+server:
+  servlet:
+    #\u914D\u7F6E\u8DEF\u5F84
+    context-path: /crowdfuning
+  port: 8080

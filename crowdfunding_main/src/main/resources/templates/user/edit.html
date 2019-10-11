@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/doc.min.css}">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="user.html">众筹平台 - 用户维护</a></div>
+        </div>
+        <div th:replace="common/header :: common_head">
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="common/side :: common_side">
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <ol class="breadcrumb">
+                <li><a th:href="@{/main}">首页</a></li>
+                <li><a th:href="@{/user/findAll/1}">数据列表</a></li>
+                <li class="active">修改</li>
+            </ol>
+            <div class="panel panel-default">
+                <div class="panel-heading">表单数据
+                    <div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i
+                            class="glyphicon glyphicon-question-sign"></i></div>
+                </div>
+                <div class="panel-body">
+                    <form id="form">
+                        <div class="form-group">
+                            <input id="id" name="id" type="hidden" th:value="${user.id}">
+                            <label for="loginacct">登陆账号</label>
+                            <p id="loginaccterr" style="color: red"></p>
+                            <input type="text" class="form-control" id="loginacct" name="loginacct" placeholder="请输入登陆账号" th:value="${user.loginacct}">
+                        </div>
+                        <div class="form-group">
+                            <label for="username">用户角色</label>
+                            <p id="usernameerr" style="color: red"></p>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户角色" th:value="${user.username}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱地址</label>
+                            <p id="emailerr" style="color: red"></p>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="请输入邮箱地址" th:value="${user.email}">
+                            <!--<p class="help-block label label-warning">请输入合法的邮箱地址, 格式为： xxxx@xxxx.com</p>-->
+                        </div>
+                        <button id="sub" type="button" class="btn btn-success"><i class="glyphicon glyphicon-edit"></i> 修改
+                        </button>
+                        <button id="resetbtn" type="button" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">帮助</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bs-callout bs-callout-info">
+                    <h4>测试标题1</h4>
+                    <p>测试内容1，测试内容1，测试内容1，测试内容1，测试内容1，测试内容1</p>
+                </div>
+                <div class="bs-callout bs-callout-info">
+                    <h4>测试标题2</h4>
+                    <p>测试内容2，测试内容2，测试内容2，测试内容2，测试内容2，测试内容2</p>
+                </div>
+            </div>
+            <!--
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+<script th:src="@{/jquery/jquery-2.1.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/script/docs.min.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+    $("#4").css("color","red");
+    $("#4").parent().parent().parent().css('display','block');
+    $("#4").parent().parent().parent().parent().removeClass("tree-closed");
+    //重置
+    $("#resetbtn").click(function () {
+        $("#form")[0].reset();
+    })
+
+    $("#sub").click(function () {
+        var loginacct = $("#loginacct");
+        var username = $("#username");
+        var email = $("#email");
+        var id = $("#id").val();
+        //表单校验
+        loginacct.focus(function () {
+            $("#loginaccterr").html("")
+        })
+        username.focus(function () {
+            $("#usernameerr").html("")
+        })
+        email.focus(function () {
+            $("#emailerr").html("")
+        })
+        if (loginacct.val().trim()==""){
+            $("#loginaccterr").html("用户名不能为空")
+        }else if (username.val().trim()=="") {
+            $("#usernameerr").html("角色不能为空")
+        }else if (email.val().trim()=="") {
+            $("#emailerr").html("邮箱不能为空")
+        }else {
+            $.ajax({
+                url:"../update",
+                type:"post",
+                data: {
+                    "loginacct": loginacct.val(),
+                    "username": username.val(),
+                    "email": email.val(),
+                    "id": id
+                },
+                success: function (isSuccess) {
+                    if (isSuccess) {
+                        alert("修改成功");
+                        window.location.href="../findAll/1";
+                    } else {
+                        alert("修改失败");
+                    }
+                },
+                error: function () {
+                    alert("修改失败,用户名重复");
+                }
+            });
+        }
+    })
+</script>
+</body>
+</html>

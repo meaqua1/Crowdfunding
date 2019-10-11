@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 广告管理</a></div>
+        </div>
+        <div th:replace="common/header :: common_head">
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="common/side :: common_side">
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form" style="float:left;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">查询条件</div>
+                                <input class="form-control has-success" type="text" placeholder="请输入查询条件">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                            class=" glyphicon glyphicon-remove"></i> 删除
+                    </button>
+                    <button type="button" class="btn btn-primary" style="float:right;"
+                            th:onclick="|window.location.href='@{/advert/add}'|"><i class="glyphicon glyphicon-plus"></i> 新增
+                    </button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="30">#</th>
+                                <th width="30"><input type='checkbox'></th>
+                                <th>广告描述</th>
+                                <th>状态</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4" align="center">
+                                    <ul class="pagination">
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/jquery/jquery-2.1.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/script/docs.min.js}"></script>
+<script type="text/javascript">
+    $("#15").css("color", "red");
+    $("#15").parent().parent().parent().css('display', 'block');
+    $("#15").parent().parent().parent().parent().removeClass("tree-closed");
+
+
+
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+        queryPage();
+    });
+    function changePageno(pageno) {
+        queryPage(pageno);
+    }
+    function queryPage( pageno ) {
+        if (pageno==null){
+            pageno=1;
+        }
+        //加载页面数据
+        $.ajax({
+            url: "findByPages/"+pageno,
+            type: "post",
+            data: {   //pageno 是属性名称,是否增加双引号无所谓
+                "size": 5
+            },
+            success: function (pageInfo) {
+                // var pageObj = result.pageObj;
+                var list = pageInfo.list;
+                var content = "";
+                $("tbody").html(content);
+                $.each(list, function (i, n) {
+                    content += "<tr>";
+                    content += "	<td>" + (i + 1) + "</td>";
+                    content += "	<td><input type='checkbox' value='" + n.id + "'></td>";
+                    content += "	<td>" + n.name + "</td>";
+                    // content+="	<td>"+n.url+"</td>";
+
+                    if (n.status == '0' || n.status == null) {
+                        content += "	<td>草稿</td>";
+                    } else if (n.status == '1') {
+                        content += "	<td>未审核</td>";
+                    } else if (n.status == '2') {
+                        content += "	<td>审核完成</td>";
+                    } else if (n.status == '3') {
+                        content += "	<td>发布</td>";
+                    }
+
+                    content += "	<td>";
+                    content += "		<button type='button' class='btn btn-primary btn-xs'>";
+                    content += "			<i class=' glyphicon glyphicon-pencil'></i>";
+                    content += "		</button>";
+                    content += "		<button type='button' class='btn btn-danger btn-xs'>";
+                    content += "			<i class=' glyphicon glyphicon-remove'></i>";
+                    content += "		</button>";
+                    content += "	</td>";
+                    content += "</tr>";
+                    $("tbody").html(content);
+                });
+
+                //拼接导航条
+                var pageContent = "";
+
+                if(pageInfo.pageNum!=1){
+                    pageContent += '<li><a href="#" onclick="changePageno('+(pageInfo.pageNum-1)+')">上一页</a></li>';
+                    pageContent += '<li><a href="#" onclick="changePageno(1)">首页</a></li>';
+                }
+
+                if (pageInfo.pages<6){
+                    for(var i=1 ; i<=pageInfo.pages ; i++){
+                        if(i==pageInfo.pageNum){
+                            pageContent += '<li class="active"><a href="#" onclick="changePageno('+i+')">'+i+'</a></li>';
+
+                        }else{
+                            pageContent += '<li><a href="#" onclick="changePageno('+i+')">'+i+'</a></li>';
+
+                        }
+                    }
+                } else if (pageInfo.pages>6&&pageInfo.pageNum-3<=0) {
+                    for(var i=1; i<=6 ; i++){
+                        if(i==pageInfo.pageNum){
+                            pageContent += '<li class="active"><a href="#" onclick="changePageno('+i+')">'+i+'</a></li>';
+
+                        }else{
+                            pageContent += '<li><a href="#" onclick="changePageno('+i+')">'+i+'</a></li>';
+
+                        }
+                    }
+                } else if (pageInfo.pages>6&&pageInfo.pageNum-3>0&&pageInfo.pageNum+3<=pageInfo.pages) {
+                    for (var i = pageInfo.pageNum - 2; i <= pageInfo.pageNum + 3; i++) {
+                        if (i == pageInfo.pageNum) {
+                            pageContent += '<li class="active"><a href="#" onclick="changePageno(' + i + ')">' + i + '</a></li>';
+
+                        } else {
+                            pageContent += '<li><a href="#" onclick="changePageno(' + i + ')">' + i + '</a></li>';
+
+                        }
+                    }
+                }else if (pageInfo.pages>6&&pageInfo.pageNum+3>pageInfo.pages) {
+                    for (var i = pageInfo.pages - 5; i <= pageInfo.pages ; i++) {
+                        if (i == pageInfo.pageNum) {
+                            pageContent += '<li class="active"><a href="#" onclick="changePageno(' + i + ')">' + i + '</a></li>';
+
+                        } else {
+                            pageContent += '<li><a href="#" onclick="changePageno(' + i + ')">' + i + '</a></li>';
+
+                        }
+                    }
+                }
+
+                if(pageInfo.pageNum!=pageInfo.pages){
+                    pageContent += '<li><a href="#" onclick="changePageno('+(pageInfo.pageNum+1)+')">下一页</a></li>';
+                    pageContent += '<li><a href="#" onclick="changePageno('+(pageInfo.pages)+')">尾页</a></li>';
+                }
+
+                $(".pagination").html(pageContent);
+            },
+
+            error: function () {
+                alert("err");
+            }
+
+        });
+    }
+</script>
+</body>
+</html>
