@@ -28,9 +28,11 @@ public class CrTests {
 
     @Test
     public void contextLoads(){
+        userService.findById(1);
     }
     @Test
     public void Test(){
+        userService.findById(1);
 
     }
 

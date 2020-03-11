@@ -1,4 +1,6 @@
 spring:
+#  resources:
+#    static-locations: classpath:/hello,classpath:/welcome
   thymeleaf:
     #\u9632\u6B62HTML\u7ED3\u675F\u6807\u7B7E\u62A5\u9519
     mode: HTML
@@ -10,7 +12,7 @@ spring:
     url: jdbc:mysql://localhost:3306/crowdfunding?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-  #    type: com.alibaba.druid.pool.DruidDataSource
+#    type: com.alibaba.druid.pool.DruidDataSource
 
 
 

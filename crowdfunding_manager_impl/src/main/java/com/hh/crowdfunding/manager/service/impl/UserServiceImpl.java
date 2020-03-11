@@ -10,6 +10,7 @@ import com.hh.crowdfunding.manager.dao.UserRoleMapper;
 import com.hh.crowdfunding.manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -117,13 +118,20 @@ public class UserServiceImpl implements UserService {
      * @param id
      */
     @Override
+    @Transactional
     public User findById(Integer id) {
+        userMapper.selectByPrimaryKey(id);
         return userMapper.selectByPrimaryKey(id);
     }
-    /*@Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+/*    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public User findById(Integer id) {
         System.out.println(userMapper.selectByPrimaryKey(id));
+        try {
+            Thread.sleep(1000000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return userMapper.selectByPrimaryKey(id);
     }*/
     /**

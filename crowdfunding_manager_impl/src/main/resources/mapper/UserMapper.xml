@@ -13,7 +13,7 @@
     delete from t_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.hh.crowdfunding.domain.User">
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into t_user (id, loginacct, userpswd, 
       username, email, createtime
       )
